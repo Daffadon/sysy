@@ -6,6 +6,9 @@ I created this converter because I had difficulty using [one of the exporters](h
 
 ## Usage
 
+> [!NOTE]
+> Every version that has release is safe to use. I'll update this repository later regarding an optimization or more metrics to be add. 
+
 ### Image
 
 ```bash
