@@ -1,6 +1,16 @@
 # Sysy - Nginx Access Log converter to Prometheus Metrics
 
+## Background
+
+I created this converter because I had difficulty using [one of the exporters](https://github.com/jkroepke/access-log-exporter). This repository was also inspired by that repository. I always encountered a parse error, even when I configured it the same way. So, to have at least some informational metrics (since we know the official nginx-exporter doesn't provide anything for the open-source version), I did something similar with the repository, which transfers syslog to this app and converts it into metrics, but with different variants of metrics and methodology.
+
 ## Usage
+
+### Image
+
+```bash
+docker pull daffaputranarendra/sysy:v0.0.1
+```
 
 ### Nginx Configuration
 
@@ -35,5 +45,7 @@ For the example, you can see .env and docker-compose.yml in this repository. Ple
 ### Grafana Dashboard
 
 Import JSON that is available in this repository, inside the config directory.
+
+<br/>
 
 <img src="./asset//grafana.png" alt="Grafana Dashboard"/>
