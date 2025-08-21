@@ -1,0 +1,45 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - syslog-nginx
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  syslog-nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: syslog-nginx
+    ports:
+      - "2112:2112"
+    environment:
+      - CONF_NGINX_TARGET_URL=http://nginx/nginx_status
+      - CONF_SYSLOG_ADDR=:5140
+      - CONF_LOG_ENABLE=true
+
+volumes:
+  prometheus-data: {}
+  grafana-data: {}
