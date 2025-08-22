@@ -22,7 +22,7 @@ docker pull daffaputranarendra/sysy:v0.0.2
 Add Below Configuration to your existing nginx.conf. For example, check config directory in this repository.
 
 ```nginx
-  log_format syslog_format '$http_host\t'
+  log_format syslog_format '$remote_addr\t'
   '$request_method\t'
   '$status\t'
   '$request_completion\t'
