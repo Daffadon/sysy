@@ -29,7 +29,9 @@ services:
       - grafana-data:/var/lib/grafana
 
   syslog-nginx:
-    image: daffaputranarendra/sysy:v0.0.1
+    image: daffaputranarendra/sysy:v0.0.2
+    ports:
+      - "2112:2112"
     container_name: syslog-nginx
     environment:
       - CONF_NGINX_TARGET_URL=http://nginx/nginx_status

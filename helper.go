@@ -6,15 +6,7 @@ import (
 	"strings"
 )
 
-func parseSyslogLine(line string, remoteAddr string) *logEntry {
-	// Extract client IP from [ip:port]
-	ip := remoteAddr
-	if idx := strings.LastIndex(remoteAddr, ":"); idx != -1 {
-		ip = remoteAddr[0:idx]
-	}
-	ip = strings.Trim(ip, "[]")
-
-	// Syslog payload format after "nginx:" should match the Nginx log_format
+func parseSyslogLine(line string) *logEntry {
 	parts := strings.Split(line, "\t")
 	if len(parts) < 8 {
 		log.Printf("Error Log Parse: %s\n", line)
@@ -27,8 +19,7 @@ func parseSyslogLine(line string, remoteAddr string) *logEntry {
 	}
 
 	return &logEntry{
-		ip:      ip,
-		host:    parts[0],
+		ip:      parts[0],
 		method:  parts[1],
 		status:  parts[2],
 		uri:     parts[7],

@@ -76,8 +76,6 @@ func scrapeStubStatus(t string) {
 	}
 }
 
-// ----------------- Main -----------------
-
 func main() {
 	_ = godotenv.Load(".env")
 	d := os.Getenv("CONF_LOG_ENABLE")
@@ -101,7 +99,7 @@ func main() {
 
 		buf := make([]byte, 65535)
 		for {
-			n, remote, err := pc.ReadFrom(buf)
+			n, _, err := pc.ReadFrom(buf)
 			if err != nil {
 				continue
 			}
@@ -110,7 +108,7 @@ func main() {
 				line = strings.TrimSpace(line[i+7:])
 			}
 			log.Default().Println(line)
-			if entry := parseSyslogLine(line, remote.String()); entry != nil {
+			if entry := parseSyslogLine(line); entry != nil {
 				requestsByIP.WithLabelValues(entry.ip).Inc()
 				requestsByURI.WithLabelValues(entry.uri).Inc()
 				latencyByURI.WithLabelValues(entry.uri).Observe(entry.latency)
