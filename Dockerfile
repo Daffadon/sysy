@@ -9,6 +9,9 @@ RUN go mod download
 COPY . .
 
 RUN go build -ldflags "-s -w" -o app .
+RUN apk update && apk add upx 
+
+RUN upx --best --lzma app
 
 FROM gcr.io/distroless/static-debian12
 
