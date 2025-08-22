@@ -29,12 +29,8 @@ services:
       - grafana-data:/var/lib/grafana
 
   syslog-nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: daffaputranarendra/sysy:v0.0.1
     container_name: syslog-nginx
-    ports:
-      - "2112:2112"
     environment:
       - CONF_NGINX_TARGET_URL=http://nginx/nginx_status
       - CONF_SYSLOG_ADDR=:5140
