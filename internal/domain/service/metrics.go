@@ -12,11 +12,16 @@ import (
 
 type (
 	MetricsService interface {
-		ScrapeStatus(t string)
+		ScrapeStubStatus(t string)
 	}
+	metricsService struct{}
 )
 
-func ScrapeStubStatus(t string) {
+func NewMetricsService() MetricsService {
+	return &metricsService{}
+}
+
+func (m *metricsService) ScrapeStubStatus(t string) {
 	resp, err := http.Get(t)
 	if err != nil {
 		log.Println("Error scraping stub_status:", err)

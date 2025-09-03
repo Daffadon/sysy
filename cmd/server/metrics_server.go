@@ -17,10 +17,10 @@ type MetricServer struct {
 
 func (m *MetricServer) Run(ctx context.Context) {
 
-	var ms service.MetricsService
+	ms := service.NewMetricsService()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/metrics", func(w http.ResponseWriter, r *http.Request) {
-		ms.ScrapeStatus(m.ScrapeTarget)
+		ms.ScrapeStubStatus(m.ScrapeTarget)
 		promhttp.Handler().ServeHTTP(w, r)
 	})
 
