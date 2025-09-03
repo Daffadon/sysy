@@ -1,12 +1,14 @@
-package main
+package pkg
 
 import (
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/daffadon/sysy/internal/domain/dto"
 )
 
-func parseSyslogLine(line string) *logEntry {
+func ParseSyslogLine(line string) *dto.LogEntry {
 	parts := strings.Split(line, "\t")
 	if len(parts) < 8 {
 		log.Printf("Error Log Parse: %s\n", line)
@@ -18,17 +20,16 @@ func parseSyslogLine(line string) *logEntry {
 		lat = 0
 	}
 
-	return &logEntry{
-		ip:      parts[0],
-		method:  parts[1],
-		status:  parts[2],
-		uri:     parts[7],
-		latency: lat,
+	return &dto.LogEntry{
+		IP:      parts[0],
+		Method:  parts[1],
+		Status:  parts[2],
+		URI:     parts[7],
+		Latency: lat,
 	}
 }
 
-// statusClass converts a status string like "200" to its class label "2xx".
-func statusClass(status string) string {
+func StatusClass(status string) string {
 	if len(status) >= 3 {
 		switch status[0] {
 		case '2':

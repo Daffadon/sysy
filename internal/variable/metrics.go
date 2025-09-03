@@ -1,11 +1,9 @@
-package main
+package variable
 
 import "github.com/prometheus/client_golang/prometheus"
 
-// ----------------- Prometheus Metrics -----------------
-
 var (
-	requestsByIP = prometheus.NewCounterVec(
+	RequestsByIP = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "syslog_requests_by_ip",
 			Help: "Number of requests by client IP",
@@ -13,7 +11,7 @@ var (
 		[]string{"ip"},
 	)
 
-	requestsByURI = prometheus.NewCounterVec(
+	RequestsByURI = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "syslog_requests_by_uri",
 			Help: "Number of requests by URI",
@@ -21,7 +19,7 @@ var (
 		[]string{"uri"},
 	)
 
-	latencyByURI = prometheus.NewHistogramVec(
+	LatencyByURI = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Name:    "syslog_request_latency_seconds",
 			Help:    "Latency of requests by URI",
@@ -30,46 +28,46 @@ var (
 		[]string{"uri"},
 	)
 
-	nginxActive = prometheus.NewGauge(prometheus.GaugeOpts{
+	NginxActive = prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: "nginx_active_connections",
 		Help: "Active client connections",
 	})
 
-	nginxAccepts = prometheus.NewCounter(prometheus.CounterOpts{
+	NginxAccepts = prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "nginx_accepted_connections_total",
 		Help: "Total accepted connections",
 	})
 
-	nginxHandled = prometheus.NewCounter(prometheus.CounterOpts{
+	NginxHandled = prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "nginx_handled_connections_total",
 		Help: "Total handled connections",
 	})
 
-	nginxRequests = prometheus.NewCounter(prometheus.CounterOpts{
+	NginxRequests = prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "nginx_requests_total",
 		Help: "Total requests handled",
 	})
 
-	nginxReading = prometheus.NewGauge(prometheus.GaugeOpts{
+	NginxReading = prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: "nginx_reading_connections",
 		Help: "Connections where nginx is reading request headers",
 	})
 
-	nginxWriting = prometheus.NewGauge(prometheus.GaugeOpts{
+	NginxWriting = prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: "nginx_writing_connections",
 		Help: "Connections where nginx is writing response back",
 	})
 
-	nginxWaiting = prometheus.NewGauge(prometheus.GaugeOpts{
+	NginxWaiting = prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: "nginx_waiting_connections",
 		Help: "Idle connections waiting for requests",
 	})
 
-	nginxUp = prometheus.NewGauge(prometheus.GaugeOpts{
+	NginxUp = prometheus.NewGauge(prometheus.GaugeOpts{
 		Name: "nginx_up",
 		Help: "Whether scraping nginx stub_status was successful (1 = UP, 0 = DOWN)",
-	})	
-	responsesByHTTPCode = prometheus.NewCounterVec(
+	})
+	ResponsesByHTTPCode = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "syslog_responses_by_class_total",
 			Help: "Number of responses grouped by HTTP status class (e.g. 2xx,3xx)",
