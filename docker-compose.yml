@@ -29,7 +29,7 @@ services:
       - grafana-data:/var/lib/grafana
 
   syslog-nginx:
-    image: daffaputranarendra/sysy:v0.0.2
+    image: daffaputranarendra/sysy:v0.0.3
     ports:
       - "2112:2112"
     container_name: syslog-nginx

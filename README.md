@@ -14,7 +14,7 @@ So, to have at least some informational metrics (since we know the official [ngi
 ### Image
 
 ```bash
-docker pull daffaputranarendra/sysy:v0.0.2
+docker pull daffaputranarendra/sysy:v0.0.3
 ```
 
 ### Nginx Configuration
