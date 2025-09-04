@@ -47,6 +47,9 @@ func (s *SysServer) Run(ctx context.Context) {
 			}
 		}
 	}()
+	if s.ServerReady != nil {
+		s.ServerReady <- true
+	}
 	<-ctx.Done()
 	log.Default().Println("shutting down syslog server")
 }
