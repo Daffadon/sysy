@@ -19,7 +19,7 @@ WORKDIR /app
 
 COPY --from=builder /app/app .
 
-EXPOSE 2112
-EXPOSE 5140
+EXPOSE 2112/tcp
+EXPOSE 5140/udp
 
 CMD ["./app"]
