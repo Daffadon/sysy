@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
 	"net"
 	"strings"
 
@@ -14,6 +14,7 @@ import (
 type SysServer struct {
 	ServerReady chan bool
 	Address     string
+	Logger      *slog.Logger
 }
 
 func (s *SysServer) Run(ctx context.Context) {
@@ -38,7 +39,7 @@ func (s *SysServer) Run(ctx context.Context) {
 			if i := strings.Index(line, "nginx:"); i != -1 {
 				line = strings.TrimSpace(line[i+7:])
 			}
-			log.Default().Println(line)
+			s.Logger.Info(line)
 			if entry := pkg.ParseSyslogLine(line); entry != nil {
 				v.RequestsByIP.WithLabelValues(entry.IP).Inc()
 				v.RequestsByURI.WithLabelValues(entry.URI).Inc()
@@ -51,5 +52,5 @@ func (s *SysServer) Run(ctx context.Context) {
 		s.ServerReady <- true
 	}
 	<-ctx.Done()
-	log.Default().Println("shutting down syslog server")
+	fmt.Println("Shutting down syslog server...")
 }

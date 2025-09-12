@@ -2,7 +2,7 @@ package service
 
 import (
 	"bufio"
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -14,17 +14,21 @@ type (
 	MetricsService interface {
 		ScrapeStubStatus(t string)
 	}
-	metricsService struct{}
+	metricsService struct {
+		logger *slog.Logger
+	}
 )
 
-func NewMetricsService() MetricsService {
-	return &metricsService{}
+func NewMetricsService(logger *slog.Logger) MetricsService {
+	return &metricsService{
+		logger: logger,
+	}
 }
 
 func (m *metricsService) ScrapeStubStatus(t string) {
 	resp, err := http.Get(t)
 	if err != nil {
-		log.Println("Error scraping stub_status:", err)
+		m.logger.Error("Error scraping stub_status", slog.Any("error", err))
 		vars.NginxUp.Set(0)
 		return
 	}

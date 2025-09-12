@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -26,10 +26,12 @@ func init() {
 func main() {
 	_ = godotenv.Load(".env")
 	d := os.Getenv("CONF_LOG_ENABLE")
+	var logger *slog.Logger
 	if d != "true" {
-		log.SetOutput(io.Discard)
+		logger = slog.New(slog.NewTextHandler(io.Discard, nil))
 		fmt.Println("Log Mode Disabled")
 	} else {
+		logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 		fmt.Println("Log Mode Enabled")
 	}
 	t := "http://nginx/nginx_status"
@@ -46,6 +48,7 @@ func main() {
 		ServerReady:  metricsServerReady,
 		Address:      ":2112",
 		ScrapeTarget: t,
+		Logger:       logger,
 	}
 	go func() {
 		metricsServer.Run(ctx)
@@ -64,6 +67,7 @@ func main() {
 	sylogServer := &server.SysServer{
 		ServerReady: sylogServerReady,
 		Address:     addr,
+		Logger:      logger,
 	}
 	go func() {
 		sylogServer.Run(ctx)
