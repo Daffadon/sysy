@@ -49,7 +49,7 @@ For the example, you can see .env and docker-compose.yml in this repository. Ple
 
 ### Grafana Dashboard
 
-Import [JSON](./config/Nginx%20Monitoring-1755763182476.json) that is available in this repository.
+Import [JSON](./config/Nginx%20Monitoring-1755829532920.json) that is available in this repository.
 
 <br/>
 
