@@ -41,9 +41,10 @@ func (s *SysServer) Run(ctx context.Context) {
 			}
 			s.Logger.Info(line)
 			if entry := pkg.ParseSyslogLine(line); entry != nil {
+				normURI := pkg.NormalizeURI(entry.URI)
 				v.RequestsByIP.WithLabelValues(entry.IP).Inc()
-				v.RequestsByURI.WithLabelValues(entry.URI).Inc()
-				v.LatencyByURI.WithLabelValues(entry.URI).Observe(entry.Latency)
+				v.RequestsByURI.WithLabelValues(normURI).Inc()
+				v.LatencyByURI.WithLabelValues(normURI).Observe(entry.Latency)
 				v.ResponsesByHTTPCode.WithLabelValues(pkg.StatusClass(entry.Status)).Inc()
 			}
 		}

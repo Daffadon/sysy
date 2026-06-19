@@ -2,6 +2,8 @@ package pkg
 
 import (
 	"log"
+	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -43,4 +45,74 @@ func StatusClass(status string) string {
 		}
 	}
 	return "other"
+}
+
+var (
+	reUUID = regexp.MustCompile(`(?i)^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`)
+	reInt  = regexp.MustCompile(`^\d+$`)
+	reHex  = regexp.MustCompile(`(?i)^[0-9a-f]{16,}$`)
+)
+
+// NormalizeURI reduces cardinality for Prometheus labels.
+func NormalizeURI(raw string) string {
+	if raw == "" {
+		return "/"
+	}
+
+	// If raw is full URL, keep only path.
+	if u, err := url.Parse(raw); err == nil && u.Path != "" {
+		raw = u.Path
+	} else {
+		// raw might be "/a/b?x=1"
+		if i := strings.IndexByte(raw, '?'); i >= 0 {
+			raw = raw[:i]
+		}
+		if i := strings.IndexByte(raw, '#'); i >= 0 {
+			raw = raw[:i]
+		}
+	}
+
+	// normalize slashes
+	path := strings.ReplaceAll(raw, "//", "/")
+	for strings.Contains(path, "//") {
+		path = strings.ReplaceAll(path, "//", "/")
+	}
+	if path == "" || path[0] != '/' {
+		path = "/" + path
+	}
+
+	parts := strings.Split(path, "/")
+	out := make([]string, 0, len(parts))
+
+	// keep first N segments only
+	const maxSegments = 4
+	segCount := 0
+
+	for _, p := range parts {
+		if p == "" {
+			continue
+		}
+		seg := p
+
+		switch {
+		case reUUID.MatchString(seg):
+			seg = ":uuid"
+		case reInt.MatchString(seg):
+			seg = ":id"
+		case reHex.MatchString(seg):
+			seg = ":hex"
+		}
+
+		out = append(out, seg)
+		segCount++
+		if segCount >= maxSegments {
+			out = append(out, ":rest")
+			break
+		}
+	}
+
+	if len(out) == 0 {
+		return "/"
+	}
+	return "/" + strings.Join(out, "/")
 }
